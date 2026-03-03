@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Charvi Patel — My Little City</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <span class="nav-name">charvi patel.</span>
+    <ul>
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skyline-outer">City</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════════════════════════════
+       HERO
+  ═══════════════════════════════ -->
+  <section id="hero">
+    <div class="stars-container" id="stars"></div>
+
+    <!-- Clickable sun/moon — toggles dark/light mode -->
+    <div class="hero-sun" id="hero-sun" title="Toggle light / dark">
+      <span class="sun-icon" id="sun-icon"></span>
+    </div>
+
+    <div class="cloud cloud-lg" style="top:17%; animation:drift1 28s linear 0s infinite;"><div class="cloud-body"></div></div>
+    <div class="cloud cloud-md" style="top:33%; animation:drift2 22s linear -7s infinite;"><div class="cloud-body"></div></div>
+    <div class="cloud cloud-sm" style="top:11%; animation:drift3 18s linear -3s infinite;"><div class="cloud-body"></div></div>
+    <div class="cloud cloud-md" style="top:50%; animation:drift1 32s linear -15s infinite;"><div class="cloud-body"></div></div>
+
+    <div class="hero-content">
+      <p class="hero-tag">🌸 &nbsp; charvi-idk.github.io &nbsp; 🌸</p>
+      <h1 class="hero-name">CHARVI</h1>
+      <p class="hero-sub">cs student &amp; software developer</p>
+      <p class="hero-city-line">welcome to my little city 🏙️</p>
+      <span class="hero-scroll">
+        <span>scroll to explore</span>
+        <span class="hero-scroll-arrow"></span>
+      </span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       ABOUT — Postcard
+  ═══════════════════════════════ -->
+  <section id="about">
+    <div class="postcard-wrap reveal">
+      <div class="postcard">
+
+        <div class="pc-left">
+          <span class="pc-dear">Dear visitor,</span>
+          <span class="pc-label">01 — About Me</span>
+          <h2 class="pc-title">Hello, I'm Charvi ✨</h2>
+          <div class="pc-body">
+            <p>I'm a <strong>Computer Science student at Royal Holloway, University of London</strong> (predicted First Class 🎓), passionate about building things that are technically solid and genuinely useful.</p>
+            <p>I've shipped full-stack apps, low-level C++ engines, and award-winning hackathon projects — including <strong>1st place at iCHack Imperial 2026</strong> for a sensory-friendly journey planner for neurodivergent travellers.</p>
+            <p>Outside of code: Women in STEM committee member, occasional trader (grew a simulated $10M portfolio to $13.8M 📈), and always up for a challenge.</p>
+          </div>
+          <div class="skill-row">
+            <span class="skill-pill">Java</span>
+            <span class="skill-pill">Python</span>
+            <span class="skill-pill">C++</span>
+            <span class="skill-pill">JavaScript</span>
+            <span class="skill-pill">SQL</span>
+            <span class="skill-pill">Spring Boot</span>
+            <span class="skill-pill">Flutter</span>
+            <span class="skill-pill">Docker</span>
+            <span class="skill-pill">REST APIs</span>
+            <span class="skill-pill">TDD</span>
+            <span class="skill-pill">Git</span>
+            <span class="skill-pill">HTML/CSS</span>
+          </div>
+        </div>
+
+        <div class="pc-right">
+          <div class="pc-stamps">
+            <div class="pc-stamp"><div class="pc-stamp-inner s1" data-val="£0.75">💻</div></div>
+            <div class="pc-stamp"><div class="pc-stamp-inner s2" data-val="£0.75">🌸</div></div>
+          </div>
+          <div>
+            <div class="postmark">
+              <span>CS · RHUL</span>
+              <strong style="font-size:0.55rem">2025</strong>
+              <span>✦ ✦ ✦</span>
+            </div>
+          </div>
+          <div class="pc-bottom">
+            <div class="pc-ctas">
+              <a href="https://github.com/charvi-idk" class="pc-btn pc-btn-primary" target="_blank">GitHub ↗</a>
+              <a href="https://www.linkedin.com/in/charvi-patel-779a53254/" class="pc-btn pc-btn-ghost" target="_blank">LinkedIn ↗</a>
+            </div>
+            <div class="pc-address">
+              <span class="pc-address-line">Charvi Patel</span>
+              <span class="pc-address-line">charvi-idk.github.io</span>
+              <span class="pc-address-line small">London, UK · 2025</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /postcard -->
+    </div><!-- /postcard-wrap -->
+  </section>
+
+  <!-- ═══════════════════════════════
+       CITY — Horizontal scroll skyline
+  ═══════════════════════════════ -->
+  <div id="skyline-outer">
+    <div id="skyline-sticky">
+
+      <!-- Clickable sun/moon in city section -->
+      <div class="sky-sun" id="sky-sun" title="Toggle light / dark"></div>
+
+      <div class="cloud cloud-lg" style="top:7%;  animation:drift1 38s linear -12s infinite; opacity:.65;"><div class="cloud-body"></div></div>
+      <div class="cloud cloud-md" style="top:20%; animation:drift2 27s linear -6s  infinite; opacity:.65;"><div class="cloud-body"></div></div>
+      <div class="cloud cloud-sm" style="top:13%; animation:drift3 20s linear -14s infinite; opacity:.55;"><div class="cloud-body"></div></div>
+
+      <div class="ground-strip"></div>
+      <div id="sky-progress-bar"><div id="sky-progress"></div></div>
+
+      <div id="skyline-track">
+
+        <!-- INTRO SIGN -->
+        <div class="intro-panel">
+          <div class="welcome-sign">
+            <div class="welcome-plane">🌿</div>
+            <h2>Welcome to<br/>Charvi's City</h2>
+            <p>Each building is a project.<br/>Click to open.</p>
+            <span class="welcome-arrow">→</span>
+          </div>
+        </div>
+
+        <div class="city-gap" style="width:110px; justify-content:center; gap:1rem;">
+          <div class="tree"><div class="tree-leaves"></div><div class="tree-trunk"></div></div>
+          <div class="tree" style="transform:scale(0.8) translateY(10px)"><div class="tree-leaves"></div><div class="tree-trunk"></div></div>
+        </div>
+
+        <!-- PROJECT 1 — Neuro-Route -->
+        <div class="building" id="b1">
+          <div class="smoke" style="top:-38px; left:calc(100% - 30px);">
+            <div class="smoke-puff"></div><div class="smoke-puff"></div><div class="smoke-puff"></div>
+          </div>
+          <div class="b-body b1-body">
+            <div class="b1-chimney"></div>
+            <div class="b-sign">The Lab 🏆</div>
+            <div class="b-windows">
+              <div class="b-win-row">
+                <div class="win lit arch" style="width:18px;height:22px;"></div>
+                <div class="win lit arch" style="width:18px;height:22px;"></div>
+                <div class="win arch"     style="width:18px;height:22px;"></div>
+              </div>
+              <div class="b-win-row">
+                <div class="win"     style="width:16px;height:18px;"></div>
+                <div class="win lit" style="width:16px;height:18px;"></div>
+                <div class="win lit" style="width:16px;height:18px;"></div>
+              </div>
+              <div class="b-win-row">
+                <div class="win lit" style="width:16px;height:18px;"></div>
+                <div class="win"     style="width:16px;height:18px;"></div>
+                <div class="win lit" style="width:16px;height:18px;"></div>
+              </div>
+            </div>
+            <div class="b1-awning"></div>
+            <div class="b-door"></div>
+          </div>
+          <div class="b-popup">
+            <div class="popup-card">
+              <div class="popup-top" style="background:linear-gradient(135deg,var(--b-butter),#f0d080);">
+                <span class="popup-proj-no">Project 001 · 🏆 1st Place iCHack Imperial</span>🧠
+              </div>
+              <div class="popup-body">
+                <div class="popup-title">Neuro-Route</div>
+                <div class="popup-desc">Sensory-friendly journey planner for neurodivergent travellers, built in 48 hours. Won Best Travel Hack &amp; 3rd in Tech for Good. AI route scoring across noise, crowding &amp; heat — 50 combinations per journey.</div>
+                <div class="popup-tags">
+                  <span class="popup-tag">Flutter</span><span class="popup-tag">Python</span>
+                  <span class="popup-tag">TfL API</span><span class="popup-tag">AI</span>
+                </div>
+                <a class="popup-link" href="https://github.com/charvi-idk" target="_blank">View on GitHub →</a>
+              </div>
+              <div class="popup-caret"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="city-gap" style="width:120px; align-items:flex-end; justify-content:space-around;">
+          <div class="lamp"><div class="lamp-head"></div><div class="lamp-post"></div><div class="lamp-base"></div></div>
+          <div class="bench"><div class="bench-back"></div><div class="bench-top"></div><div class="bench-legs"><div class="bench-leg"></div><div class="bench-leg"></div></div></div>
+        </div>
+
+        <!-- PROJECT 2 — Job Scheduler -->
+        <div class="building" id="b2">
+          <div class="b2-roof"><div class="b2-antenna"></div></div>
+          <div class="b-body b2-body">
+            <div class="b-sign">The Engine Room</div>
+            <div class="b-windows">
+              <div class="b-win-row"><div class="win lit" style="width:14px;height:16px;"></div><div class="win" style="width:14px;height:16px;"></div><div class="win lit" style="width:14px;height:16px;"></div></div>
+              <div class="b-win-row"><div class="win" style="width:14px;height:16px;"></div><div class="win lit" style="width:14px;height:16px;"></div><div class="win lit" style="width:14px;height:16px;"></div></div>
+              <div class="b-win-row"><div class="win lit" style="width:14px;height:16px;"></div><div class="win lit" style="width:14px;height:16px;"></div><div class="win" style="width:14px;height:16px;"></div></div>
+              <div class="b-win-row"><div class="win" style="width:14px;height:16px;"></div><div class="win lit" style="width:14px;height:16px;"></div><div class="win" style="width:14px;height:16px;"></div></div>
+              <div class="b-win-row"><div class="win lit" style="width:14px;height:16px;"></div><div class="win" style="width:14px;height:16px;"></div><div class="win lit" style="width:14px;height:16px;"></div></div>
+            </div>
+            <div class="b-door"></div>
+          </div>
+          <div class="b-popup">
+            <div class="popup-card">
+              <div class="popup-top" style="background:linear-gradient(135deg,var(--b-sage),#98c490);">
+                <span class="popup-proj-no">Project 002</span>⚙️
+              </div>
+              <div class="popup-body">
+                <div class="popup-title">Job Scheduler &amp; Load Balancer</div>
+                <div class="popup-desc">Dynamic task scheduling with round-robin &amp; priority-based algorithms across 10,000+ simulated jobs. Cut average completion time by 35%. Real-time monitoring dashboard at 500+ tasks/min.</div>
+                <div class="popup-tags">
+                  <span class="popup-tag">Systems</span><span class="popup-tag">Algorithms</span><span class="popup-tag">Dashboard</span>
+                </div>
+                <a class="popup-link" href="https://github.com/charvi-idk" target="_blank">View on GitHub →</a>
+              </div>
+              <div class="popup-caret"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="city-gap" style="width:130px; justify-content:space-around;">
+          <div class="tree"><div class="tree-leaves"></div><div class="tree-trunk"></div></div>
+          <div class="lamp"><div class="lamp-head"></div><div class="lamp-post"></div><div class="lamp-base"></div></div>
+        </div>
+
+        <!-- PROJECT 3 — Monte Carlo -->
+        <div class="building" id="b3">
+          <div class="b-body b3-body">
+            <div class="b3-tower"><div class="b3-flag"></div></div>
+            <div class="b-sign">The Casino</div>
+            <div class="b-windows">
+              <div class="b-win-row">
+                <div class="win lit arch" style="width:22px;height:28px;"></div>
+                <div class="win lit arch" style="width:22px;height:28px;"></div>
+              </div>
+              <div class="b-win-row">
+                <div class="win lit" style="width:18px;height:20px;"></div>
+                <div class="win"     style="width:18px;height:20px;"></div>
+                <div class="win lit" style="width:18px;height:20px;"></div>
+              </div>
+              <div class="b-win-row">
+                <div class="win"     style="width:18px;height:20px;"></div>
+                <div class="win lit" style="width:18px;height:20px;"></div>
+                <div class="win lit" style="width:18px;height:20px;"></div>
+              </div>
+            </div>
+            <div class="b-door"></div>
+          </div>
+          <div class="b-popup">
+            <div class="popup-card">
+              <div class="popup-top" style="background:linear-gradient(135deg,var(--b-blush),#e8a8b0);">
+                <span class="popup-proj-no">Project 003</span>🃏
+              </div>
+              <div class="popup-body">
+                <div class="popup-title">Monte Carlo Poker Risk Engine</div>
+                <div class="popup-desc">Multithreaded Monte Carlo engine computing poker EV, risk profiles &amp; probabilities in C++/Python. 70% computation speedup via parallelisation. Scalable architecture for varied betting scenarios.</div>
+                <div class="popup-tags">
+                  <span class="popup-tag">C++</span><span class="popup-tag">Python</span><span class="popup-tag">Multithreading</span>
+                </div>
+                <a class="popup-link" href="https://github.com/charvi-idk" target="_blank">View on GitHub →</a>
+              </div>
+              <div class="popup-caret"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="city-gap" style="width:120px; align-items:flex-end; justify-content:space-around;">
+          <div class="bench"><div class="bench-back"></div><div class="bench-top"></div><div class="bench-legs"><div class="bench-leg"></div><div class="bench-leg"></div></div></div>
+          <div class="tree" style="transform:scale(0.85)"><div class="tree-leaves"></div><div class="tree-trunk"></div></div>
+        </div>
+
+        <!-- PROJECT 4 — Repository System -->
+        <div class="building" id="b4">
+          <div class="b4-pediment"></div>
+          <div class="b4-columns">
+            <div class="b4-col"></div><div class="b4-col"></div>
+            <div class="b4-col"></div><div class="b4-col"></div>
+          </div>
+          <div class="b-body b4-body">
+            <div class="b-sign">The Archive</div>
+            <div class="b-windows">
+              <div class="b-win-row">
+                <div class="win lit arch" style="width:22px;height:30px;"></div>
+                <div class="win arch"     style="width:22px;height:30px;"></div>
+                <div class="win lit arch" style="width:22px;height:30px;"></div>
+                <div class="win lit arch" style="width:22px;height:30px;"></div>
+              </div>
+              <div class="b-win-row">
+                <div class="win"     style="width:20px;height:18px;"></div>
+                <div class="win lit" style="width:20px;height:18px;"></div>
+                <div class="win lit" style="width:20px;height:18px;"></div>
+                <div class="win"     style="width:20px;height:18px;"></div>
+              </div>
+              <div class="b-win-row">
+                <div class="win lit" style="width:20px;height:18px;"></div>
+                <div class="win"     style="width:20px;height:18px;"></div>
+                <div class="win lit" style="width:20px;height:18px;"></div>
+                <div class="win lit" style="width:20px;height:18px;"></div>
+              </div>
+            </div>
+            <div class="b-door" style="width:26px;height:30px;"></div>
+          </div>
+          <div class="b-popup">
+            <div class="popup-card">
+              <div class="popup-top" style="background:linear-gradient(135deg,var(--b-lavender),#b0a0d4);">
+                <span class="popup-proj-no">Project 004</span>🗄️
+              </div>
+              <div class="popup-body">
+                <div class="popup-title">Repository System</div>
+                <div class="popup-desc">Team-built asset repository supporting 200+ artefacts. Full REST API with RBAC, metadata tagging &amp; inter-asset linking. TDD with JUnit, Docker, Spring Security, Swagger UI &amp; GitLab CI.</div>
+                <div class="popup-tags">
+                  <span class="popup-tag">Java</span><span class="popup-tag">Spring Boot</span>
+                  <span class="popup-tag">Docker</span><span class="popup-tag">TDD</span>
+                </div>
+                <a class="popup-link" href="https://github.com/charvi-idk" target="_blank">View on GitHub →</a>
+              </div>
+              <div class="popup-caret"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="city-gap" style="width:170px; justify-content:space-around; align-items:flex-end;">
+          <div class="lamp"><div class="lamp-head"></div><div class="lamp-post"></div><div class="lamp-base"></div></div>
+          <div class="tree"><div class="tree-leaves"></div><div class="tree-trunk"></div></div>
+          <div class="tree" style="transform:scale(0.72) translateY(8px)"><div class="tree-leaves"></div><div class="tree-trunk"></div></div>
+        </div>
+
+        <!-- CV — Grand Library -->
+        <div class="cv-section" id="cv-building">
+          <div class="cv-building">
+            <div class="cv-star">⭐</div>
+            <div class="cv-spire"></div>
+            <div class="cv-bell-tower"></div>
+            <div class="cv-tower"><div class="cv-clock">📜</div></div>
+            <div class="cv-body">
+              <div class="cv-nameplate">
+                <span>Grand Archive</span>
+                <small>Est. 2024</small>
+              </div>
+              <div class="b-windows" style="padding:0.3rem 0.8rem;">
+                <div class="b-win-row">
+                  <div class="win lit arch" style="width:20px;height:28px;"></div>
+                  <div class="win arch"     style="width:20px;height:28px;"></div>
+                  <div class="win lit arch" style="width:20px;height:28px;"></div>
+                  <div class="win lit arch" style="width:20px;height:28px;"></div>
+                  <div class="win arch"     style="width:20px;height:28px;"></div>
+                </div>
+                <div class="b-win-row">
+                  <div class="win lit" style="width:18px;height:20px;"></div>
+                  <div class="win lit" style="width:18px;height:20px;"></div>
+                  <div class="win"     style="width:18px;height:20px;"></div>
+                  <div class="win lit" style="width:18px;height:20px;"></div>
+                  <div class="win lit" style="width:18px;height:20px;"></div>
+                </div>
+                <div class="b-win-row">
+                  <div class="win"     style="width:18px;height:20px;"></div>
+                  <div class="win lit" style="width:18px;height:20px;"></div>
+                  <div class="win lit" style="width:18px;height:20px;"></div>
+                  <div class="win"     style="width:18px;height:20px;"></div>
+                  <div class="win lit" style="width:18px;height:20px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="cv-steps">
+              <div class="cv-step"></div>
+              <div class="cv-step"></div>
+              <div class="cv-step"></div>
+            </div>
+            <div class="cv-arch"></div>
+          </div>
+          <div class="cv-popup">
+            <div class="cv-popup-card">
+              <div class="cv-popup-title">Curriculum Vitæ ✨</div>
+              <div class="cv-popup-sub">My experience, education &amp; everything in between.</div>
+              <a class="cv-popup-dl" href="CV.pdf" download>↓ Download my CV (PDF)</a>
+              <div class="popup-caret" style="border-top-color:var(--paper);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTRO -->
+        <div class="outro-panel">
+          <div class="outro-card">
+            <h3>That's the tour! 🎉</h3>
+            <p>Thanks for visiting my city.<br/>Let's build something together.</p>
+            <div class="outro-links">
+              <a class="outro-link outro-link-primary" href="/cdn-cgi/l/email-protection#1f7c777e6d6976316f7e6b7a732d2d295f78727e7673317c7072">✉️ Say hello</a>
+              <a class="outro-link outro-link-ghost" href="https://github.com/charvi-idk" target="_blank">🐱 GitHub</a>
+              <a class="outro-link outro-link-ghost" href="https://www.linkedin.com/in/charvi-patel-779a53254/" target="_blank">💼 LinkedIn</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /skyline-track -->
+    </div><!-- /skyline-sticky -->
+  </div><!-- /skyline-outer -->
+
+  <footer>
+    <p class="footer-name">charvi patel.</p>
+    <p class="footer-sub">crafted with ♥ · charvi-idk.github.io · 2025</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
