@@ -653,3 +653,92 @@ footer::before { content: ''; display: block; height: 4px; background: repeating
   .b-popup, .cv-popup { position: relative; bottom: auto; left: auto; transform: none !important; opacity: 1; pointer-events: all; width: 100%; }
   .ground-strip, #sky-progress-bar { display: none; }
 }
+/* ════════════════════════════════════════
+   UNDER CONSTRUCTION BUILDINGS
+════════════════════════════════════════ */
+
+/* Desaturate UC building bodies */
+.uc-building .b-body {
+  filter: saturate(0.25) brightness(0.88);
+}
+/* No lit windows */
+.uc-building .win.lit {
+  background: var(--win-unlit);
+  box-shadow: none;
+}
+
+/* Scaffolding wrapper */
+.uc-scaffold {
+  position: absolute;
+  inset: -8px -8px 0 -8px;
+  pointer-events: none;
+  z-index: 25;
+}
+
+/* Vertical scaffold poles */
+.uc-pole {
+  position: absolute;
+  bottom: 0;
+  top: -8px;
+  width: 7px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #c8a860 0px, #c8a860 10px,
+    #a88840 10px, #a88840 12px
+  );
+  border-radius: 3px 3px 0 0;
+  box-shadow: inset -1px 0 0 rgba(0,0,0,0.15);
+}
+.uc-pole-l { left: 0; }
+.uc-pole-r { right: 0; }
+
+/* Horizontal scaffold planks */
+.uc-plank {
+  position: absolute;
+  left: -4px; right: -4px;
+  height: 9px;
+  background: linear-gradient(to bottom, #e0c070, #c0a050);
+  border-radius: 2px;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+
+/* UC sign face (replaces b-sign) */
+.uc-sign-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  margin: 5px 0;
+  padding: 5px 8px;
+  width: 85%;
+  background: repeating-linear-gradient(
+    -45deg,
+    #f0c030 0px, #f0c030 6px,
+    #1c1c1c 6px, #1c1c1c 12px
+  );
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.uc-stripe-bar { font-size: 1rem; line-height: 1; }
+.uc-coming {
+  font-size: 0.45rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  text-align: center;
+  line-height: 1.5;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+}
+
+/* Dark mode poles slightly muted */
+[data-theme="dark"] .uc-pole {
+  background: repeating-linear-gradient(
+    to bottom,
+    #907838 0px, #907838 10px,
+    #705820 10px, #705820 12px
+  );
+}
+[data-theme="dark"] .uc-plank {
+  background: linear-gradient(to bottom, #906020, #704810);
+}

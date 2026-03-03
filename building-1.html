@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Arcade — Algorithm Visualiser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  <style>
+    /* ════ VARIABLES ════ */
+    :root {
+      --sky-top:     #cdb8e8;
+      --sky-mid:     #f0c4c8;
+      --sky-horizon: #fce8b8;
+      --paper:       #fdf4e8;
+      --paper-w:     #f8e8cc;
+      --paper-a:     #f0ddb8;
+      --ink:         #3a2828;
+      --ink-soft:    #6a4a42;
+      --ink-mid:     #8a6a60;
+      --red:         #c85050;
+      --gold:        #f4d870;
+      --nav-bg:      rgba(253,244,232,0.85);
+      --bar-idle:    #88c4d8;
+      --bar-cmp:     #e87878;
+      --bar-swap:    #f0c840;
+      --bar-done:    #88cc88;
+    }
+    [data-theme="dark"] {
+      --sky-top:     #1a1230;
+      --sky-mid:     #2a1a3c;
+      --sky-horizon: #1e1428;
+      --paper:       #2a2018;
+      --paper-w:     #322818;
+      --paper-a:     #3a3020;
+      --ink:         #e8d8c8;
+      --ink-soft:    #c8a888;
+      --ink-mid:     #a08878;
+      --red:         #e07070;
+      --nav-bg:      rgba(26,18,48,0.88);
+      --bar-idle:    #5898b8;
+      --bar-cmp:     #d85858;
+      --bar-swap:    #d8b028;
+      --bar-done:    #60b060;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      min-height: 100vh; color: var(--ink);
+      background: linear-gradient(160deg, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-horizon) 100%);
+      transition: background 0.5s, color 0.4s;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none; opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
+    }
+
+    /* ════ STARS ════ */
+    #stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star  { position: absolute; background: white; border-radius: 50%; animation: twinkle ease-in-out infinite; opacity: 0; }
+    [data-theme="dark"] .star { background: #fffce8; filter: drop-shadow(0 0 2px rgba(255,252,200,0.8)); }
+    @keyframes twinkle {
+      0%,100% { opacity: 0;   transform: scale(0.5); }
+      20%     { opacity: 1;   transform: scale(1.4); }
+      50%     { opacity: 0.1; transform: scale(0.8); }
+      80%     { opacity: 0.9; transform: scale(1.2); }
+    }
+
+    /* ════ CLOUDS ════ */
+    .cloud { position: fixed; pointer-events: none; z-index: 1; }
+    .cloud-body { position: relative; background: rgba(255,255,255,0.72); border-radius: 50px; }
+    .cloud-body::before,.cloud-body::after { content:''; position:absolute; background:rgba(255,255,255,0.72); border-radius:50%; }
+    .cloud-sm .cloud-body { width:70px; height:22px; }
+    .cloud-sm .cloud-body::before { width:30px; height:30px; top:-14px; left:10px; }
+    .cloud-sm .cloud-body::after  { width:22px; height:22px; top:-10px; left:36px; }
+    .cloud-md .cloud-body { width:110px; height:30px; }
+    .cloud-md .cloud-body::before { width:50px; height:50px; top:-24px; left:15px; }
+    .cloud-md .cloud-body::after  { width:36px; height:36px; top:-18px; left:56px; }
+    [data-theme="dark"] .cloud-body,
+    [data-theme="dark"] .cloud-body::before,
+    [data-theme="dark"] .cloud-body::after { background:rgba(180,160,200,0.16); }
+    @keyframes drift1 { from { transform: translateX(110vw); } to { transform: translateX(calc(-100vw - 200px)); } }
+    @keyframes drift2 { from { transform: translateX(105vw); } to { transform: translateX(calc(-100vw - 200px)); } }
+    @keyframes drift3 { from { transform: translateX(100vw); } to { transform: translateX(calc(-100vw - 200px)); } }
+
+    /* ════ NAV ════ */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:800;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0.8rem 2.5rem;
+      background: var(--nav-bg); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(180,140,100,0.12);
+      transition: background 0.4s;
+    }
+    .nav-back {
+      display:flex; align-items:center; gap:0.45rem;
+      font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      color: var(--ink-mid); text-decoration:none; transition:color 0.2s;
+    }
+    .nav-back:hover { color: var(--ink); }
+    .nav-title { font-size:0.82rem; font-weight:700; color:var(--ink-soft); letter-spacing:0.06em; }
+    .nav-moon {
+      width:34px; height:34px; border-radius:50%;
+      background:var(--paper-w); border:1.5px solid var(--paper-a);
+      font-size:1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:transform 0.3s; user-select:none;
+    }
+    .nav-moon:hover { transform: scale(1.15) rotate(15deg); }
+
+    /* ════ LAYOUT ════ */
+    main {
+      position:relative; z-index:10;
+      max-width:860px; margin:0 auto;
+      padding: 5rem 1.5rem 3rem;
+    }
+
+    /* ════ CARD ════ */
+    .arcade-card {
+      background: var(--paper);
+      border-radius: 2px;
+      border: 1px solid rgba(100,70,40,0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05), 0 14px 36px rgba(100,70,50,0.1), 0 36px 70px rgba(100,70,50,0.04);
+      transition: background 0.4s;
+    }
+
+    /* Header */
+    .card-header {
+      padding:1.1rem 1.4rem 0.9rem;
+      border-bottom:1px solid var(--paper-a);
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:0.6rem;
+    }
+    .header-left { display:flex; align-items:center; gap:0.55rem; }
+    .header-dot  { width:10px; height:10px; border-radius:50%; background:var(--red); }
+    .header-title { font-size:0.76rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink); }
+    .header-tabs { display:flex; gap:0.4rem; }
+
+    /* Dropdowns */
+    .ddwrap { position:relative; }
+    .dd-btn {
+      font-family:'JetBrains Mono',monospace;
+      font-size:0.6rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      padding:0.28rem 0.75rem; border-radius:20px;
+      background:var(--paper-w); border:1.5px solid var(--paper-a);
+      color:var(--ink-mid); cursor:pointer; transition:all 0.18s;
+    }
+    .dd-btn:hover,.dd-btn.active { background:var(--ink); border-color:var(--ink); color:var(--paper); }
+    .dd-menu {
+      display:none; position:absolute; top:calc(100% + 5px); left:0; z-index:200;
+      background:var(--paper); border:1.5px solid var(--paper-a);
+      border-radius:10px; overflow:hidden; min-width:155px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.1);
+    }
+    .dd-menu.open { display:block; }
+    .dd-menu button {
+      display:block; width:100%;
+      font-family:'JetBrains Mono',monospace;
+      font-size:0.6rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
+      padding:0.5rem 1rem; text-align:left;
+      background:none; border:none; cursor:pointer;
+      color:var(--ink-mid); transition:all 0.12s;
+    }
+    .dd-menu button:hover { background:var(--paper-w); color:var(--ink); }
+    .dd-menu button.sel  { background:var(--paper-a);  color:var(--ink); font-weight:700; }
+
+    /* Viz area */
+    .viz-wrap {
+      background:var(--paper-w);
+      padding:1rem 1.4rem 0.6rem;
+    }
+    .viz-status { display:flex; align-items:center; gap:0.45rem; margin-bottom:0.5rem; }
+    .pip { width:7px; height:7px; border-radius:50%; background:var(--red); flex-shrink:0; animation:pip-pulse 1.8s ease-in-out infinite; }
+    .pip.idle { background:var(--ink-mid); animation:none; }
+    @keyframes pip-pulse { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+    .status-txt { font-size:0.56rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink-mid); opacity:0.65; }
+    .step-lbl { margin-left:auto; font-size:0.52rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-mid); opacity:0.45; }
+    .bars { display:flex; align-items:flex-end; gap:2px; height:220px; }
+    .bar { flex:1; min-width:2px; border-radius:3px 3px 0 0; background:var(--bar-idle); transition:height 0.05s ease, background 0.07s ease; }
+    .bar.cmp        { background:var(--bar-cmp); }
+    .bar.swap       { background:var(--bar-swap); }
+    .bar.done       { background:var(--bar-done); }
+    .bar.sch-target { background:var(--red); }
+    .bar.sch-cur    { background:var(--bar-swap); }
+    .bar.sch-out    { background:var(--bar-done); }
+    .bar.sch-gone   { opacity:0.22; }
+
+    /* Controls */
+    .controls {
+      display:flex; align-items:center; flex-wrap:wrap; gap:1rem;
+      padding:0.9rem 1.4rem 1rem;
+      border-top:1px solid var(--paper-a);
+    }
+    .ctrl-group { display:flex; flex-direction:column; gap:0.28rem; }
+    .ctrl-lbl { font-size:0.48rem; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--ink-mid); opacity:0.6; }
+    .pills { display:flex; gap:0.3rem; }
+    .pill {
+      font-family:'JetBrains Mono',monospace;
+      font-size:0.62rem; font-weight:700;
+      padding:0.28rem 0.62rem; border-radius:8px;
+      background:var(--paper-w); border:1.5px solid var(--paper-a);
+      color:var(--ink-mid); cursor:pointer; transition:all 0.16s;
+    }
+    .pill:hover { background:var(--paper-a); color:var(--ink); }
+    .pill.active { background:var(--ink); border-color:var(--ink); color:var(--paper); }
+    .speed-row { display:flex; align-items:center; gap:0.5rem; }
+    input[type=range] {
+      -webkit-appearance:none; width:96px; height:4px;
+      border-radius:2px; background:var(--paper-a); outline:none; cursor:pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance:none; width:13px; height:13px; border-radius:50%;
+      background:var(--red); cursor:pointer;
+      border:2px solid var(--paper); box-shadow:0 1px 4px rgba(0,0,0,0.2);
+    }
+    .spd-val { font-size:0.58rem; font-weight:600; color:var(--ink-mid); min-width:30px; }
+    .ctrl-btns { margin-left:auto; display:flex; gap:0.45rem; align-items:center; }
+    .btn-shuf {
+      font-family:'JetBrains Mono',monospace;
+      font-size:0.6rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      padding:0.52rem 1rem; border-radius:30px;
+      background:var(--paper-w); border:1.5px solid var(--paper-a);
+      color:var(--ink-mid); cursor:pointer; transition:all 0.18s;
+    }
+    .btn-shuf:hover { background:var(--paper-a); color:var(--ink); }
+    .btn-run {
+      font-family:'JetBrains Mono',monospace;
+      font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+      padding:0.55rem 1.7rem; border-radius:30px;
+      background:var(--red); border:none; color:#fff; cursor:pointer;
+      box-shadow:0 4px 14px rgba(200,80,80,0.3); transition:all 0.2s;
+    }
+    .btn-run:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 6px 18px rgba(200,80,80,0.4); }
+    .btn-run:disabled { opacity:0.45; cursor:not-allowed; }
+
+    /* Info strip */
+    .info-strip {
+      display:flex; align-items:center; flex-wrap:wrap; gap:1.2rem;
+      padding:0.65rem 1.4rem;
+      border-top:1px solid var(--paper-a);
+      background:var(--paper);
+    }
+    .info-cell { display:flex; flex-direction:column; gap:0.12rem; }
+    .info-key { font-size:0.46rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--ink-mid); opacity:0.55; }
+    .info-val { font-size:0.7rem; font-weight:700; color:var(--ink); }
+    .legend { margin-left:auto; display:flex; gap:0.9rem; flex-wrap:wrap; }
+    .leg { display:flex; align-items:center; gap:0.28rem; font-size:0.5rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-mid); }
+    .leg-dot { width:8px; height:8px; border-radius:50%; }
+
+    @media (max-width:600px) {
+      .legend { display:none; }
+      .bars { height:160px; }
+      .ctrl-btns { margin-left:0; width:100%; justify-content:flex-end; }
+      nav { padding:0.7rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="stars"></div>
+  <div class="cloud cloud-md" style="top:10%;animation:drift1 34s linear -8s infinite;opacity:.6;"><div class="cloud-body"></div></div>
+  <div class="cloud cloud-sm" style="top:24%;animation:drift2 22s linear -3s infinite;opacity:.5;"><div class="cloud-body"></div></div>
+  <div class="cloud cloud-sm" style="top:58%;animation:drift3 28s linear -18s infinite;opacity:.4;"><div class="cloud-body"></div></div>
+
+  <nav>
+    <a class="nav-back" href="index.html">← back to city</a>
+    <span class="nav-title">the arcade ✨</span>
+    <div class="nav-moon" id="theme-btn">🌙</div>
+  </nav>
+
+  <main>
+    <div class="arcade-card">
+
+      <div class="card-header">
+        <div class="header-left">
+          <div class="header-dot"></div>
+          <span class="header-title" id="algo-name">Bubble Sort</span>
+        </div>
+        <div class="header-tabs">
+          <div class="ddwrap">
+            <button class="dd-btn active" id="sort-btn" onclick="toggleDD('sort-dd',event)">Sorting ▾</button>
+            <div class="dd-menu" id="sort-dd">
+              <button class="sel" onclick="pick('bubble',   'Bubble Sort',   'sort', this)">Bubble Sort</button>
+              <button             onclick="pick('selection','Selection Sort','sort', this)">Selection Sort</button>
+              <button             onclick="pick('insertion','Insertion Sort','sort', this)">Insertion Sort</button>
+              <button             onclick="pick('merge',    'Merge Sort',    'sort', this)">Merge Sort</button>
+              <button             onclick="pick('quick',    'Quick Sort',    'sort', this)">Quick Sort</button>
+            </div>
+          </div>
+          <div class="ddwrap">
+            <button class="dd-btn" id="search-btn" onclick="toggleDD('search-dd',event)">Search ▾</button>
+            <div class="dd-menu" id="search-dd">
+              <button onclick="pick('linear','Linear Search','search',this)">Linear Search</button>
+              <button onclick="pick('binary','Binary Search','search',this)">Binary Search</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="viz-wrap">
+        <div class="viz-status">
+          <div class="pip idle" id="pip"></div>
+          <span class="status-txt" id="status">ready</span>
+          <span class="step-lbl">steps: <span id="steps">0</span></span>
+        </div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="controls">
+        <div class="ctrl-group">
+          <span class="ctrl-lbl">Num Elements</span>
+          <div class="pills">
+            <button class="pill active" onclick="setN(15,  this)">15</button>
+            <button class="pill"        onclick="setN(31,  this)">31</button>
+            <button class="pill"        onclick="setN(63,  this)">63</button>
+            <button class="pill"        onclick="setN(127, this)">127</button>
+          </div>
+        </div>
+        <div class="ctrl-group">
+          <span class="ctrl-lbl">Speed</span>
+          <div class="speed-row">
+            <input type="range" min="1" max="100" value="50" id="speed"
+                   oninput="document.getElementById('spd').textContent=this.value+'%'">
+            <span class="spd-val" id="spd">50%</span>
+          </div>
+        </div>
+        <div class="ctrl-btns">
+          <button class="btn-shuf" onclick="shuffle()">↺ Shuffle</button>
+          <button class="btn-run" id="run-btn" onclick="run()">RUN</button>
+        </div>
+      </div>
+
+      <div class="info-strip">
+        <div class="info-cell"><span class="info-key">Algorithm</span>      <span class="info-val" id="i-name">Bubble Sort</span></div>
+        <div class="info-cell"><span class="info-key">Time Complexity</span> <span class="info-val" id="i-time">O(n²)</span></div>
+        <div class="info-cell"><span class="info-key">Space</span>           <span class="info-val" id="i-space">O(1)</span></div>
+        <div class="info-cell"><span class="info-key">Stable</span>          <span class="info-val" id="i-stable">Yes</span></div>
+        <div class="legend">
+          <div class="leg"><div class="leg-dot" style="background:var(--bar-idle)"></div>idle</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--bar-cmp)"></div>comparing</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--bar-swap)"></div>swapping</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--bar-done)"></div>done</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+  /* ── Theme ── */
+  const H = document.documentElement;
+  const tb = document.getElementById('theme-btn');
+  function setTheme(t) {
+    H.setAttribute('data-theme', t);
+    localStorage.setItem('theme', t);
+    tb.textContent = t === 'dark' ? '\u{1F319}' : '\u2600\uFE0F';
+  }
+  setTheme(localStorage.getItem('theme') || 'dark');
+  tb.onclick = () => setTheme(H.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+
+  /* ── Stars ── */
+  (()=>{
+    const c = document.getElementById('stars');
+    for (let i = 0; i < 55; i++) {
+      const d = document.createElement('div'); d.className = 'star';
+      const s = Math.random() * 2.2 + 0.5;
+      d.style.cssText = `width:${s}px;height:${s}px;top:${Math.random()*96}%;left:${Math.random()*100}%;animation-duration:${(2+Math.random()*4).toFixed(2)}s;animation-delay:${(Math.random()*10).toFixed(2)}s`;
+      c.appendChild(d);
+    }
+  })();
+
+  /* ── State ── */
+  let arr=[], N=15, algo='bubble', type='sort', running=false, steps=0;
+
+  const INFO = {
+    bubble:    {time:'O(n²)',      space:'O(1)',      stable:'Yes'},
+    selection: {time:'O(n²)',      space:'O(1)',      stable:'No'},
+    insertion: {time:'O(n²)',      space:'O(1)',      stable:'Yes'},
+    merge:     {time:'O(n log n)', space:'O(n)',      stable:'Yes'},
+    quick:     {time:'O(n log n)', space:'O(log n)',  stable:'No'},
+    linear:    {time:'O(n)',       space:'O(1)',      stable:'—'},
+    binary:    {time:'O(log n)',   space:'O(1)',      stable:'—'},
+  };
+
+  const delay = () => Math.round(420 - +document.getElementById('speed').value * 4.1);
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  /* ── Render ── */
+  function render(vals, cls=[]) {
+    const wrap = document.getElementById('bars');
+    const mx = Math.max(...vals, 1);
+    wrap.innerHTML = '';
+    vals.forEach((v,i) => {
+      const b = document.createElement('div');
+      b.className = 'bar' + (cls[i] ? ' '+cls[i] : '');
+      b.style.height = (v/mx*100)+'%';
+      wrap.appendChild(b);
+    });
+  }
+
+  function mkCls(a, fn) { return a.map((_,i) => fn(i)||''); }
+  function tick() { document.getElementById('steps').textContent = ++steps; }
+  function setStatus(t, active=true) {
+    document.getElementById('status').textContent = t;
+    document.getElementById('pip').classList.toggle('idle', !active);
+  }
+
+  /* ── Array init ── */
+  function buildArr() {
+    arr = Array.from({length:N}, ()=>Math.floor(Math.random()*88)+12);
+    if (type==='search') arr.sort((a,b)=>a-b);
+    steps=0; document.getElementById('steps').textContent='0';
+    render(arr);
+  }
+
+  /* ── Controls ── */
+  function setN(n, btn) {
+    if (running) return;
+    N=n;
+    document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    buildArr();
+  }
+  function shuffle() { if (!running) { buildArr(); setStatus('shuffled \u2728', false); } }
+
+  function toggleDD(id, e) {
+    e.stopPropagation();
+    document.querySelectorAll('.dd-menu').forEach(m=>{ if(m.id!==id) m.classList.remove('open'); });
+    document.getElementById(id).classList.toggle('open');
+  }
+  document.addEventListener('click', ()=>document.querySelectorAll('.dd-menu').forEach(m=>m.classList.remove('open')));
+
+  function pick(key, label, t, btn) {
+    if (running) return;
+    algo=key; type=t;
+    document.getElementById('algo-name').textContent = label;
+    document.getElementById('i-name').textContent    = label;
+    document.getElementById('i-time').textContent    = INFO[key].time;
+    document.getElementById('i-space').textContent   = INFO[key].space;
+    document.getElementById('i-stable').textContent  = INFO[key].stable;
+    document.getElementById('sort-btn').classList.toggle('active',   t==='sort');
+    document.getElementById('search-btn').classList.toggle('active', t==='search');
+    document.querySelectorAll('.dd-menu button').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+    document.querySelectorAll('.dd-menu').forEach(m=>m.classList.remove('open'));
+    buildArr(); setStatus('ready', false);
+  }
+
+  /* ── Run ── */
+  async function run() {
+    if (running) return;
+    running=true; steps=0;
+    document.getElementById('run-btn').disabled=true;
+    document.getElementById('steps').textContent='0';
+    setStatus('running...', true);
+    const a=[...arr];
+    try {
+      if      (algo==='bubble')    await bubbleSort(a);
+      else if (algo==='selection') await selectionSort(a);
+      else if (algo==='insertion') await insertionSort(a);
+      else if (algo==='merge')     { await mergeSort(a,0,a.length-1); render(a,a.map(()=>'done')); setStatus('sorted! \u2728',false); arr=a; }
+      else if (algo==='quick')     { await quickSort(a,0,a.length-1); render(a,a.map(()=>'done')); setStatus('sorted! \u2728',false); arr=a; }
+      else if (algo==='linear')    await linearSearch(a);
+      else if (algo==='binary')    await binarySearch(a);
+    } catch(_){}
+    running=false;
+    document.getElementById('run-btn').disabled=false;
+  }
+
+  /* ─── SORTING ALGORITHMS ─── */
+  async function bubbleSort(a) {
+    const done=new Set();
+    for(let i=0;i<a.length-1;i++){
+      for(let j=0;j<a.length-i-1;j++){
+        render(a,mkCls(a,k=>done.has(k)?'done':k===j||k===j+1?'cmp':''));
+        tick(); await sleep(delay());
+        if(a[j]>a[j+1]){
+          [a[j],a[j+1]]=[a[j+1],a[j]];
+          render(a,mkCls(a,k=>done.has(k)?'done':k===j||k===j+1?'swap':''));
+          tick(); await sleep(delay());
+        }
+      }
+      done.add(a.length-1-i);
+    }
+    done.add(0);
+    render(a,a.map(()=>'done')); setStatus('sorted! \u2728',false); arr=a;
+  }
+
+  async function selectionSort(a) {
+    const done=new Set();
+    for(let i=0;i<a.length-1;i++){
+      let mi=i;
+      for(let j=i+1;j<a.length;j++){
+        render(a,mkCls(a,k=>done.has(k)?'done':k===mi?'swap':k===j?'cmp':''));
+        tick(); await sleep(delay());
+        if(a[j]<a[mi]) mi=j;
+      }
+      if(mi!==i) [a[i],a[mi]]=[a[mi],a[i]];
+      done.add(i);
+    }
+    done.add(a.length-1);
+    render(a,a.map(()=>'done')); setStatus('sorted! \u2728',false); arr=a;
+  }
+
+  async function insertionSort(a) {
+    for(let i=1;i<a.length;i++){
+      let j=i;
+      while(j>0&&a[j-1]>a[j]){
+        render(a,mkCls(a,k=>k===j||k===j-1?'swap':k<i?'done':''));
+        tick(); await sleep(delay());
+        [a[j],a[j-1]]=[a[j-1],a[j]]; j--;
+      }
+    }
+    render(a,a.map(()=>'done')); setStatus('sorted! \u2728',false); arr=a;
+  }
+
+  async function mergeSort(a,l,r) {
+    if(l>=r) return;
+    const m=(l+r)>>1;
+    await mergeSort(a,l,m); await mergeSort(a,m+1,r);
+    const L=a.slice(l,m+1), R=a.slice(m+1,r+1);
+    let i=0,j=0,k=l;
+    while(i<L.length&&j<R.length){
+      render(a,mkCls(a,idx=>idx>=l&&idx<=r?'cmp':''));
+      tick(); await sleep(delay());
+      a[k++]=L[i]<=R[j]?L[i++]:R[j++];
+      render(a,mkCls(a,idx=>idx>=l&&idx<k?'swap':idx>=l&&idx<=r?'cmp':''));
+      await sleep(delay());
+    }
+    while(i<L.length) a[k++]=L[i++];
+    while(j<R.length) a[k++]=R[j++];
+    render(a,mkCls(a,idx=>idx>=l&&idx<=r?'done':''));
+    await sleep(delay());
+  }
+
+  async function quickSort(a,lo,hi) {
+    if(lo>=hi) return;
+    const p=await qPartition(a,lo,hi);
+    await quickSort(a,lo,p-1); await quickSort(a,p+1,hi);
+  }
+  async function qPartition(a,lo,hi){
+    let i=lo-1;
+    for(let j=lo;j<hi;j++){
+      render(a,mkCls(a,k=>k===hi?'swap':k===j?'cmp':k<=i?'done':''));
+      tick(); await sleep(delay());
+      if(a[j]<=a[hi]){ i++; [a[i],a[j]]=[a[j],a[i]]; }
+    }
+    [a[i+1],a[hi]]=[a[hi],a[i+1]]; return i+1;
+  }
+
+  /* ─── SEARCH ALGORITHMS ─── */
+  async function linearSearch(a) {
+    const t=a[Math.floor(Math.random()*a.length)];
+    setStatus('searching for '+t+'...', true);
+    for(let i=0;i<a.length;i++){
+      render(a,mkCls(a,k=>k<i?'sch-gone':k===i?'sch-cur':a[k]===t&&k>i?'sch-target':''));
+      tick(); await sleep(delay());
+      if(a[i]===t){
+        render(a,mkCls(a,k=>k===i?'sch-out':k<i?'sch-gone':''));
+        setStatus('found '+t+' at index '+i+'! \u2728',false); arr=a; return;
+      }
+    }
+    setStatus('not found',false);
+  }
+
+  async function binarySearch(a) {
+    const t=a[Math.floor(Math.random()*a.length)];
+    setStatus('searching for '+t+'...', true);
+    let lo=0, hi=a.length-1;
+    const gone=new Set();
+    while(lo<=hi){
+      const mid=(lo+hi)>>1;
+      render(a,mkCls(a,k=>gone.has(k)?'sch-gone':k===mid?'sch-cur':a[k]===t?'sch-target':''));
+      tick(); await sleep(delay()*2);
+      if(a[mid]===t){
+        render(a,mkCls(a,k=>gone.has(k)?'sch-gone':k===mid?'sch-out':''));
+        setStatus('found '+t+' at index '+mid+'! \u2728',false); arr=a; return;
+      } else if(a[mid]<t){ for(let k=lo;k<=mid;k++) gone.add(k); lo=mid+1; }
+      else                { for(let k=mid;k<=hi;k++) gone.add(k); hi=mid-1; }
+    }
+    setStatus('not found',false);
+  }
+
+  /* ── Init ── */
+  buildArr();
+  setStatus('ready', false);
+  </script>
+</body>
+</html>
